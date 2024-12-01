@@ -1,4 +1,4 @@
-FROM nimlang/choosenim:latest
+FROM nimlang/choosenim:latest AS aoc2024
 
 WORKDIR /repo
 
