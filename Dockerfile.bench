@@ -1,0 +1,7 @@
+FROM mattcl/aoc-ci-bencher:latest AS aoc2024-bench
+
+WORKDIR /repo
+
+COPY . .
+
+CMD ["bash"]
