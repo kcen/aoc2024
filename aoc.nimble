@@ -5,9 +5,10 @@ license      = "NONE"
 srcDir       = "."
 bin          = @["kcen-aoc"]
 
+skipDirs = @["tests"]
 installFiles = @["aoc.nim"]
 installDirs  = @["aoc"]
+installExt = @["nim"]
 
 # Dependencies
-#requires "nim >= 2.2.0"
-# Uncomment if you require features from a specific Nim version
+requires "nim >= 2.2.0"
