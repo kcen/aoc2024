@@ -8,7 +8,7 @@ proc getInput*(): string =
     quit(QuitFailure)
 
 proc getDay*(): int =
-    return parseInt(getEnv("AOC_DAY", "00"))
+    return (try: parseInt(getEnv("AOC_DAY")) except ValueError: -1)
 
 type Solution* = object
     part_one*, part_two*: string
