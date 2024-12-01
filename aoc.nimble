@@ -3,7 +3,7 @@ author       = "Casey"
 description  = "AOC 2024"
 license      = "NONE"
 srcDir       = "."
-bin          = @["aoc"]
+bin          = @["kcen-aoc"]
 
 installFiles = @["aoc.nim"]
 installDirs  = @["aoc"]
