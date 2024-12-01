@@ -1,3 +1,7 @@
+dist/
 nimcache/
 nimblecache/
 htmldocs/
+nimble.develop
+nimble.paths
+*.exe
