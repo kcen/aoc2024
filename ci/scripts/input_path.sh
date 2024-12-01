@@ -13,7 +13,7 @@ fi
 
 # We need to zero-pad the day to 2 digits to properly match our inputs.
 padded=$(printf "%02d" "$AOC_DAY")
-expected="inputs/day${padded}.txt"
+expected="inputs/day_${padded}"
 
 # The specification says that if an input does not exist for a given day, we
 # need to exit with a nonzero code.
