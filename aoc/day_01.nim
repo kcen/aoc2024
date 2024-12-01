@@ -1,13 +1,12 @@
-import std/[strutils, os, json, sequtils, algorithm]
+import std/[strutils, sequtils, algorithm]
 import aoc_utils
 
 proc day_01*(): Solution =
     var list_1: seq[int] = @[]
     var list_2: seq[int] = @[]
-    for line in getInput().splitlines:
-        let nums = line.splitWhitespace()
-        let first = parseInt(nums[0])
-        let last = parseInt(nums[1])
+    for line in getInput().splitlines.mapIt(it.splitWhitespace(1)):
+        let first = parseInt(line[0])
+        let last = parseInt(line[1])
         list_1.add(first)
         list_2.add(last)
     list_1.sort
