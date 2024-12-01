@@ -1,7 +1,7 @@
 import std/[strutils, os, json, sequtils, algorithm]
 import aoc_utils
 
-proc day_01*(input: string): Solution =
+proc day_01*(): Solution =
     var list_1: seq[int] = @[]
     var list_2: seq[int] = @[]
     for line in getInput().splitlines:
