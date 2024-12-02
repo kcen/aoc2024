@@ -77,26 +77,24 @@ import std/[strutils, strscans, sequtils, algorithm, tables]
 import aoc_utils
 
 proc day_01*(): Solution =
-    var list_1: seq[int] = @[]
-    var list_2: seq[int] = @[]
-    var list_1_counts = initCountTable[int]()
-    var list_2_counts = initCountTable[int]()
+    var left_list, right_list: seq[int] = @[]
+    var left_list_counts, right_list_counts = initCountTable[int]()
 
     for line in getInput().splitlines:
-        var first, last: int
-        if scanf(line, "$i   $i", first, last):
-            list_1.add(first)
-            list_1_counts.inc(first)
-            list_2.add(last)
-            list_2_counts.inc(last)
-    list_1.sort
-    list_2.sort
-    var diff_count = 0
-    for entry in zip(list_1, list_2):
-        diff_count += abs(entry[0] - entry[1])
+        var left_value, right_value: int
+        if scanf(line, "$i   $i", left_value, right_value):
+            left_list.add(left_value)
+            left_list_counts.inc(left_value)
+            right_list.add(right_value)
+            right_list_counts.inc(right_value)
+    left_list.sort
+    right_list.sort
+    var distance = 0
+    for (left_value, right_value) in zip(left_list, right_list):
+        distance += abs(left_value - right_value)
 
-    var simm_score = 0
-    for entry, count in list_1_counts:
-        simm_score += entry * count * list_2_counts[entry]
+    var similarity_score = 0
+    for left_value, left_count in left_list_counts:
+        similarity_score += left_value * left_count * right_list_counts[left_value]
 
-    Solution(part_one: $diff_count, part_two: $simm_score)
+    Solution(part_one: $distance, part_two: $similarity_score)
