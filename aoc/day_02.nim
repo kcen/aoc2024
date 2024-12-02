@@ -56,7 +56,7 @@ Update your analysis by handling situations where the Problem Dampener can remov
 Your puzzle answer was 710.
 """
 import std/[strutils, sequtils, algorithm, sugar, math, tables]
-import aoc_utils
+import aoc_utils, itertools
 
 type ReportStatus = enum
   Safe, MaybeSafe, Unsafe
@@ -65,21 +65,16 @@ proc onceRemoved(someSeq: seq[int], removeIndex: int): seq[int] =
   someSeq.dup(delete(removeIndex))
 
 proc isGoodReport(report: seq[int]): bool =
-  var prev_val = report[0]
-  var next_val = report[1]
-  var diff = abs(next_val - prev_val)
-  if diff > 3 or diff < 1:
-    return false
-  let direction = if prev_val < next_val: Ascending else: Descending
-  for this_val in report[2..^1]:
-    prev_val = next_val
-    next_val = this_val
-    diff = abs(next_val - prev_val)
-    if diff > 3 or diff < 1:
+  var direction = if report[0] > report[1]: Descending else: Ascending
+  for pair in pairwise(report):
+    let left = pair[0]
+    let right = pair[1]
+    let delta = abs(left - right)
+    if delta < 1 or delta > 3:
       return false
-    elif prev_val < next_val and direction == Descending:
+    if direction == Ascending and left > right:
       return false
-    elif prev_val > next_val and direction == Ascending:
+    if direction == Descending and left < right:
       return false
   return true
 
