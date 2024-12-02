@@ -58,16 +58,11 @@ Your puzzle answer was 710.
 import std/[strutils, sequtils, algorithm, sugar, math]
 import aoc_utils
 
+type ReportStatus = enum
+  Safe, MaybeSafe, Unsafe
+
 proc onceRemoved(someSeq: seq[int], removeIndex: int): seq[int] =
-  let seqLen = len(someSeq)
-  if removeIndex == 0:
-    result = someSeq[1..^1]
-  elif removeIndex == seqLen:
-    result = someSeq[0..^2]
-  else:
-    let startIdx = removeIndex - 1
-    let endIdx = removeIndex + 1
-    result = concat(someSeq[0 .. startIdx], someSeq[endIdx .. ^1])
+  someSeq.dup(delete(removeIndex))
 
 proc isGoodReport(report: seq[int]): bool =
   var prev_val = report[0]
