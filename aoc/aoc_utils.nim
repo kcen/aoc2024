@@ -14,7 +14,7 @@ type Solution* = object
     part_one*, part_two*: string
 
 proc printSolution*(soln: Solution) =
-    echo $(%* soln)
+    echo $( %* soln)
 
 proc notImplemented*() =
-    echo $(%* "not implemented")
+    echo $( %* "not implemented")

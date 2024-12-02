@@ -1,4 +1,4 @@
-import aoc/[aoc_utils,day_00,day_01]
+import aoc/[aoc_utils, day_00, day_01]
 
 case getDay():
     of 0:
