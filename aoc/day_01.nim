@@ -73,7 +73,7 @@ Your puzzle answer was 19457120.
 """
 
 
-import std/[strutils, sequtils, algorithm, tables]
+import std/[strutils, strscans, sequtils, algorithm, tables]
 import aoc_utils
 
 proc day_01*(): Solution =
@@ -82,13 +82,13 @@ proc day_01*(): Solution =
     var list_1_counts = initCountTable[int]()
     var list_2_counts = initCountTable[int]()
 
-    for line in getInput().splitlines.mapIt(it.splitWhitespace(1)):
-        let first = parseInt(line[0])
-        let last = parseInt(line[1])
-        list_1.add(first)
-        list_1_counts.inc(first)
-        list_2.add(last)
-        list_2_counts.inc(last)
+    for line in getInput().splitlines:
+        var first, last: int
+        if scanf(line, "$i   $i", first, last):
+            list_1.add(first)
+            list_1_counts.inc(first)
+            list_2.add(last)
+            list_2_counts.inc(last)
     list_1.sort
     list_2.sort
     var diff_count = 0
