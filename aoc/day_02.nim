@@ -55,7 +55,7 @@ Update your analysis by handling situations where the Problem Dampener can remov
 
 Your puzzle answer was 710.
 """
-import std/[strutils, sequtils, algorithm, sugar, math]
+import std/[strutils, sequtils, algorithm, sugar, math, tables]
 import aoc_utils
 
 type ReportStatus = enum
@@ -93,13 +93,24 @@ proc isOkayReport(report: seq[int]): bool =
         return true
   return false
 
+proc reportStatus(report: seq[int]): ReportStatus =
+  if isGoodReport(report):
+    return Safe
+  else:
+    for i in 0..<len(report):
+      if isGoodReport(report.onceRemoved(i)):
+        return MaybeSafe
+  return Unsafe
+
 
 proc day_02*(): Solution =
-  let reports = getInput()
+  let reportStatuses = getInput()
     .splitlines
     .map(line => line.splitWhitespace().mapIt(parseInt(it)))
+    .map(report => reportStatus(report))
+    .toCountTable
 
-  let goodReports = reports.filter(x => isGoodReport(x))
-  let okayReports = reports.filter(x => isOkayReport(x))
+  let part_1 = reportStatuses[Safe]
+  let part_2 = reportStatuses[Safe] + reportStatuses[MaybeSafe]
 
-  Solution(part_one: $(len(goodReports)), part_two: $(len(okayReports)))
+  Solution(part_one: $(part_1), part_two: $(part_2))
