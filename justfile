@@ -13,3 +13,6 @@ build-bench:
 
 run_day DAY INPUT:
   /usr/bin/env AOC_DAY={{DAY}} AOC_INPUT={{INPUT}} nim c --out:dist/kcen-aoc-debug -r --hints:off aoc.nim
+
+fast_bench DAY INPUT: build-cli
+  /usr/bin/env AOC_DAY={{DAY}} AOC_INPUT={{INPUT}} hyperfine dist/kcen-aoc
