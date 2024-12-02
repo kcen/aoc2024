@@ -59,52 +59,52 @@ import std/[strutils, sequtils, algorithm, sugar, math]
 import aoc_utils
 
 proc onceRemoved(someSeq: seq[int], removeIndex: int): seq[int] =
-    let seqLen = len(someSeq)
-    if removeIndex == 0:
-        result = someSeq[1..^1]
-    elif removeIndex == seqLen:
-        result = someSeq[0..^2]
-    else:
-        let startIdx = removeIndex - 1
-        let endIdx = removeIndex + 1
-        result = concat(someSeq[0 .. startIdx], someSeq[endIdx .. ^1])
+  let seqLen = len(someSeq)
+  if removeIndex == 0:
+    result = someSeq[1..^1]
+  elif removeIndex == seqLen:
+    result = someSeq[0..^2]
+  else:
+    let startIdx = removeIndex - 1
+    let endIdx = removeIndex + 1
+    result = concat(someSeq[0 .. startIdx], someSeq[endIdx .. ^1])
 
 proc isGoodReport(report: seq[int]): bool =
-    var prev_val = report[0]
-    var next_val = report[1]
-    var diff = abs(next_val - prev_val)
+  var prev_val = report[0]
+  var next_val = report[1]
+  var diff = abs(next_val - prev_val)
+  if diff > 3 or diff < 1:
+    return false
+  let direction = if prev_val < next_val: Ascending else: Descending
+  for this_val in report[2..^1]:
+    prev_val = next_val
+    next_val = this_val
+    diff = abs(next_val - prev_val)
     if diff > 3 or diff < 1:
-        return false
-    let direction = if prev_val < next_val: Ascending else: Descending
-    for this_val in report[2..^1]:
-        prev_val = next_val
-        next_val = this_val
-        diff = abs(next_val - prev_val)
-        if diff > 3 or diff < 1:
-            return false
-        elif prev_val < next_val and direction == Descending:
-            return false
-        elif prev_val > next_val and direction == Ascending:
-            return false
-    return true
+      return false
+    elif prev_val < next_val and direction == Descending:
+      return false
+    elif prev_val > next_val and direction == Ascending:
+      return false
+  return true
 
 
 proc isOkayReport(report: seq[int]): bool =
-    if isGoodReport(report):
+  if isGoodReport(report):
+    return true
+  else:
+    for i in 0..len(report):
+      if isGoodReport(report.onceRemoved(i)):
         return true
-    else:
-        for i in 0..len(report):
-            if isGoodReport(report.onceRemoved(i)):
-                return true
-    return false
+  return false
 
 
 proc day_02*(): Solution =
-    let reports = getInput()
-        .splitlines
-        .map(line => line.splitWhitespace().mapIt(parseInt(it)))
+  let reports = getInput()
+    .splitlines
+    .map(line => line.splitWhitespace().mapIt(parseInt(it)))
 
-    let goodReports = reports.filter(x => isGoodReport(x))
-    let okayReports = reports.filter(x => isOkayReport(x))
+  let goodReports = reports.filter(x => isGoodReport(x))
+  let okayReports = reports.filter(x => isOkayReport(x))
 
-    Solution(part_one: $(len(goodReports)), part_two: $(len(okayReports)))
+  Solution(part_one: $(len(goodReports)), part_two: $(len(okayReports)))

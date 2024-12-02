@@ -77,26 +77,26 @@ import std/[strutils, strscans, sequtils, algorithm, tables, sugar, math]
 import aoc_utils
 
 proc day_01*(): Solution =
-    var left_list, right_list: seq[int] = @[]
-    var left_list_counts, right_list_counts = initCountTable[int]()
+  var left_list, right_list: seq[int] = @[]
+  var left_list_counts, right_list_counts = initCountTable[int]()
 
-    for line in getInput().splitlines:
-        let (success, left_value, right_value) = line.scanTuple("$i   $i")
-        if success:
-            left_list.add(left_value)
-            left_list_counts.inc(left_value)
-            right_list.add(right_value)
-            right_list_counts.inc(right_value)
+  for line in getInput().splitlines:
+    let (success, left_value, right_value) = line.scanTuple("$i   $i")
+    if success:
+      left_list.add(left_value)
+      left_list_counts.inc(left_value)
+      right_list.add(right_value)
+      right_list_counts.inc(right_value)
 
-    left_list.sort
-    right_list.sort
+  left_list.sort
+  right_list.sort
 
-    let distance = zip(left_list, right_list)
-        .map(v => abs(v[0] - v[1]))
-        .sum
+  let distance = zip(left_list, right_list)
+    .map(v => abs(v[0] - v[1]))
+    .sum
 
-    let similarity_score = left_list_counts.keys.toSeq
-        .map(v => v * left_list_counts[v] * right_list_counts[v])
-        .sum
+  let similarity_score = left_list_counts.keys.toSeq
+    .map(v => v * left_list_counts[v] * right_list_counts[v])
+    .sum
 
-    Solution(part_one: $distance, part_two: $similarity_score)
+  Solution(part_one: $distance, part_two: $similarity_score)
