@@ -73,7 +73,7 @@ Your puzzle answer was 19457120.
 """
 
 
-import std/[strutils, strscans, sequtils, algorithm, tables]
+import std/[strutils, strscans, sequtils, algorithm, tables, sugar, math]
 import aoc_utils
 
 proc day_01*(): Solution =
@@ -81,20 +81,22 @@ proc day_01*(): Solution =
     var left_list_counts, right_list_counts = initCountTable[int]()
 
     for line in getInput().splitlines:
-        var left_value, right_value: int
-        if scanf(line, "$i   $i", left_value, right_value):
+        let (success, left_value, right_value) = line.scanTuple("$i   $i")
+        if success:
             left_list.add(left_value)
             left_list_counts.inc(left_value)
             right_list.add(right_value)
             right_list_counts.inc(right_value)
+
     left_list.sort
     right_list.sort
-    var distance = 0
-    for (left_value, right_value) in zip(left_list, right_list):
-        distance += abs(left_value - right_value)
 
-    var similarity_score = 0
-    for left_value, left_count in left_list_counts:
-        similarity_score += left_value * left_count * right_list_counts[left_value]
+    let distance = zip(left_list, right_list)
+        .map(v => abs(v[0] - v[1]))
+        .sum
+
+    let similarity_score = left_list_counts.keys.toSeq
+        .map(v => v * left_list_counts[v] * right_list_counts[v])
+        .sum
 
     Solution(part_one: $distance, part_two: $similarity_score)
