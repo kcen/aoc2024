@@ -93,7 +93,7 @@ proc isOkayReport(report: seq[int]): bool =
   if isGoodReport(report):
     return true
   else:
-    for i in 0..len(report):
+    for i in 0..<len(report):
       if isGoodReport(report.onceRemoved(i)):
         return true
   return false
