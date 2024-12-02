@@ -65,7 +65,7 @@ proc onceRemoved(someSeq: seq[int], removeIndex: int): seq[int] =
   someSeq.dup(delete(removeIndex))
 
 proc isGoodReport(report: seq[int]): bool =
-  var direction = if report[0] > report[1]: Descending else: Ascending
+  let direction = if report[0] > report[1]: Descending else: Ascending
   for pair in pairwise(report):
     let left = pair[0]
     let right = pair[1]
@@ -77,16 +77,6 @@ proc isGoodReport(report: seq[int]): bool =
     if direction == Descending and left < right:
       return false
   return true
-
-
-proc isOkayReport(report: seq[int]): bool =
-  if isGoodReport(report):
-    return true
-  else:
-    for i in 0..<len(report):
-      if isGoodReport(report.onceRemoved(i)):
-        return true
-  return false
 
 proc reportStatus(report: seq[int]): ReportStatus =
   if isGoodReport(report):
@@ -101,8 +91,8 @@ proc reportStatus(report: seq[int]): ReportStatus =
 proc day_02*(): Solution =
   let reportStatuses = getInput()
     .splitlines
-    .map(line => line.splitWhitespace().mapIt(parseInt(it)))
-    .map(report => reportStatus(report))
+    .map(line => line.splitWhitespace().map(parseInt))
+    .map(reportStatus)
     .toCountTable
 
   let part_1 = reportStatuses[Safe]
