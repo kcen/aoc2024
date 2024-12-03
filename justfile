@@ -1,17 +1,18 @@
 build-cli:
-  nimble --out:dist/kcen-aoc --passL:-static --opt:speed -d:release c aoc.nim
+  ./ci/scripts/build.sh
 
-container-build:
-  docker run -itv ./dist/:/repo/dist/ aoc-dev just build-cli
-
-build-dev-container:
+build_containers:
   docker build -f Dockerfile -t aoc-dev .
-
-build-bench:
   docker build -f Dockerfile.bench -t aoc-bench .
+
+container-compile:
+  docker run -itv .:/repo/ aoc-dev just build-cli
+
+fast_bench DAY INPUT: build-cli
+  cp {{INPUT}} /tmp/aoc-input
+  cp dist/kcen-aoc /tmp/kcen-aoc
+  /usr/bin/env AOC_DAY={{DAY}} AOC_INPUT=/tmp/aoc-input hyperfine -N /tmp/kcen-aoc
 
 run_day DAY INPUT:
   /usr/bin/env AOC_DAY={{DAY}} AOC_INPUT={{INPUT}} nimble c --out:dist/kcen-aoc-debug -d:nimDebugDlOpen --silent -r --hints:off aoc.nim
 
-fast_bench DAY INPUT: build-cli
-  /usr/bin/env AOC_DAY={{DAY}} AOC_INPUT={{INPUT}} hyperfine dist/kcen-aoc
