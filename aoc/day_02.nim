@@ -66,7 +66,6 @@ proc onceRemoved(someSeq: seq[int], removeIndex: int): seq[int] =
 
 proc reportErrorIndex(report: seq[int]): int =
   let direction = if report[0] > report[1]: Descending else: Ascending
-  var error_index = -1
   var index = 0
   for pair in pairwise(report):
     let left = pair[0]
@@ -88,7 +87,7 @@ proc reportStatus(report: seq[int]): ReportStatus =
   else:
     var possible_error_sites = @[error_index, error_index + 1]
     if error_index == 1: # bug: misidentified direction
-      possible_error_sites = @[0, 1]
+      possible_error_sites.add(0)
     if possible_error_sites.any(idx => reportErrorIndex(report.onceRemoved(idx)) == -1):
       return MaybeSafe
   return Unsafe
