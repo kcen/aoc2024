@@ -55,7 +55,7 @@ Update your analysis by handling situations where the Problem Dampener can remov
 
 Your puzzle answer was 710.
 """
-import std/[strutils, sequtils, algorithm, sugar, math, tables]
+import std/[strutils, sequtils, algorithm, sugar, tables]
 import aoc_utils, itertools
 
 type ReportStatus = enum
