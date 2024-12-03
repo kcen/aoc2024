@@ -91,8 +91,10 @@ proc reportStatus(report: seq[int]): ReportStatus =
 proc day_02*(): Solution =
   let reportStatuses = getInput()
     .splitlines
-    .map(line => line.splitWhitespace().map(parseInt))
-    .map(reportStatus)
+    .map(line =>
+      line.splitWhitespace()
+        .map(parseInt)
+        .reportStatus())
     .toCountTable
 
   let part_1 = reportStatuses[Safe]
