@@ -1,2 +1,2 @@
 #!/bin/bash
-just build-cli
+nimble --out:dist/kcen-aoc --passL:-static --opt:speed  -d:release c aoc.nim
