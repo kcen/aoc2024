@@ -64,27 +64,33 @@ type ReportStatus = enum
 proc onceRemoved(someSeq: seq[int], removeIndex: int): seq[int] =
   someSeq.dup(delete(removeIndex))
 
-proc isGoodReport(report: seq[int]): bool =
+proc reportErrorIndex(report: seq[int]): int =
   let direction = if report[0] > report[1]: Descending else: Ascending
+  var error_index = -1
+  var index = 0
   for pair in pairwise(report):
     let left = pair[0]
     let right = pair[1]
     let delta = abs(left - right)
     if delta < 1 or delta > 3:
-      return false
+      return index
     if direction == Ascending and left > right:
-      return false
+      return index
     if direction == Descending and left < right:
-      return false
-  return true
+      return index
+    index += 1
+  return -1
 
 proc reportStatus(report: seq[int]): ReportStatus =
-  if isGoodReport(report):
+  let error_index = reportErrorIndex(report)
+  if error_index == -1:
     return Safe
   else:
-    for i in 0..<len(report):
-      if isGoodReport(report.onceRemoved(i)):
-        return MaybeSafe
+    var possible_error_sites = @[error_index, error_index + 1]
+    if error_index == 1: # bug: misidentified direction
+      possible_error_sites = @[0, 1]
+    if possible_error_sites.any(idx => reportErrorIndex(report.onceRemoved(idx)) == -1):
+      return MaybeSafe
   return Unsafe
 
 
@@ -93,8 +99,8 @@ proc day_02*(): Solution =
     .splitlines
     .map(line =>
       line.splitWhitespace()
-        .map(parseInt)
-        .reportStatus())
+      .map(parseInt)
+      .reportStatus())
     .toCountTable
 
   let part_1 = reportStatuses[Safe]
