@@ -1,4 +1,4 @@
-import std/[strutils, os, json]
+import std/[strutils, os]
 
 proc getInput*(): string =
   let filename = getEnv("AOC_INPUT", "inputs/hello_world")
@@ -14,7 +14,9 @@ type Solution* = object
   part_one*, part_two*: string
 
 proc printSolution*(soln: Solution) =
-  echo $( %* soln)
+  echo "{\"part_one\":\"", soln.part_one, "\",\"part_two\":\"", soln.part_two, "\"}"
+  #echo $( %* soln)
 
 proc notImplemented*() =
-  echo $( %* "not implemented")
+  echo "\"not implemented\""
+  #echo $( %* "not implemented")
