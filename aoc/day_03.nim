@@ -39,21 +39,23 @@ Handle the new instructions; what do you get if you add up all of the results of
 
 Your puzzle answer was 108830766.
 """
-import std/[strscans, pegs]
+import std/[re, strscans]
 import aoc_utils
 
-let grammar = peg"""
-  Command <- Multiply / Do / Dont
-  Multiply <- 'mul(' \d+ ',' \d+ ')'
-  Do <- 'do()'
-  Dont <- 'don\'t()'
-"""
+#TODO: Drop in replacement for regex with pegs, slower for some reason
+# import std/pegs
+# let grammar = peg"""
+#   Command <- Multiply / Do / Dont
+#   Multiply <- 'mul(' \d+ ',' \d+ ')'
+#   Do <- 'do()'
+#   Dont <- 'don\'t()'
+# """
 
 type RecordState = enum
   Do, Dont
 
 proc day_03*(): Solution =
-  let commands = getInput().findAll(grammar)
+  let commands = getInput().findAll(re"mul\(\d+,\d+\)|do\(\)|don't\(\)")
   var partOneCount = 0
   var partTwoCount = 0
   var partTwoState = Do
