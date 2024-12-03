@@ -1,2 +1,2 @@
 #!/bin/bash
-nimble --out:dist/kcen-aoc --passL:-static --opt:speed  -d:release c aoc.nim
+nimble --out:dist/kcen-aoc --opt:speed -d:release -d:danger c aoc.nim
