@@ -50,12 +50,13 @@ import aoc_utils
 #   Do <- 'do()'
 #   Dont <- 'don\'t()'
 # """
+let rex = re"mul\(\d+,\d+\)|do\(\)|don't\(\)"
 
 type RecordState = enum
   Do, Dont
 
 proc day_03*(): Solution =
-  let commands = getInput().findAll(re"mul\(\d+,\d+\)|do\(\)|don't\(\)")
+  let commands = getInput().findAll(rex)
   var partOneCount = 0
   var partTwoCount = 0
   var partTwoState = Do

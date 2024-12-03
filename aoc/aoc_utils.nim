@@ -14,7 +14,10 @@ type Solution* = object
   part_one*, part_two*: string
 
 proc printSolution*(soln: Solution) =
-  echo "{\"part_one\":\"", soln.part_one, "\",\"part_two\":\"", soln.part_two, "\"}"
+  let prefix = "{\"part_one\":\""
+  let infix = "\",\"part_two\":\""
+  let suffix = "\"}"
+  echo prefix, soln.part_one, infix, soln.part_two, suffix
   #echo $( %* soln)
 
 proc notImplemented*() =
