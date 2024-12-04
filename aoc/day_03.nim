@@ -61,9 +61,10 @@ proc day_03*(): Solution =
   var dontCount = 0
   var doDontState = Do
   for command in commands:
-    if command == "do()":
+    case command:
+    of "do()":
       doDontState = Do
-    elif command == "don't()":
+    of "don't()":
       doDontState = Dont
     else:
       var a, b: int
