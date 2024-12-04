@@ -73,35 +73,34 @@ import aoc_utils
 
 type SeqGrid[char] = seq[seq[char]]
 const xmas = "XMAS".items.toSeq()
-const sam = "SAM".items.toSeq()
+const samx = "SAM".items.toSeq()
 const maxDepth = 3
-const  directions = @[(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0,1), (1, 1)]
+const directions = @[(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
 const diags = @[(-1, -1), (-1, 1), (1, -1), (1, 1)]
-const sortedSam = @['M', 'M', 'S', 'S']
+const sortedSamx = @['M', 'M', 'S', 'S']
 
 
-proc searchXmas(grid: SeqGrid, row: int, col: int, direction: (int, int), depth: int): int =
-  var seen = 0
+proc searchXmas(grid: SeqGrid, row: int, col: int, direction: (int, int), depth: int): bool =
   let (up, right) = direction
   let next_row = row + up
   let next_col = col + right
   if next_row < 0 or next_col < 0 or next_row == len(grid) or next_col == len(grid[0]):
-    return seen
+    return false
   elif grid[next_row][next_col] == xmas[depth]:
     if depth == maxDepth:
-      return 1
+      return true
     else:
-      seen += grid.searchXmas(next_row, next_col, direction, depth + 1)
-  return seen
+      return grid.searchXmas(next_row, next_col, direction, depth + 1)
+  return false
 
-proc searchSam(grid: SeqGrid, row: int, col: int): bool =
+proc searchSamx(grid: SeqGrid, row: int, col: int): bool =
   if row == 0 or col == 0 or row == len(grid)-1 or col == len(grid[0])-1:
     return false
   var vals: seq[char]
   for val in diags:
     let (up, right) = val
     vals.add(grid[row + up][col + right])
-  if sorted(vals) == sortedSam:
+  if sorted(vals) == sortedSamx:
     if vals[0] != vals[3]:
       return true
   return false
@@ -117,9 +116,10 @@ proc day_04*(): Solution =
     for col in 0..<width:
       if grid[row][col] == xmas[0]:
         for d in directions:
-          part_1_total += grid.searchXmas(row,col, d, 1)
-      elif grid[row][col] == sam[1]:
-        if grid.searchSam(row, col):
+          if grid.searchXmas(row, col, d, 1):
+            part_1_total += 1
+      elif grid[row][col] == samx[1]:
+        if grid.searchSamx(row, col):
           part_2_total += 1
 
-  Solution(part_one: $(part_1_total), part_two: $part_2_total)
+  Solution(part_one: $part_1_total, part_two: $part_2_total)
