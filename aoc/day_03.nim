@@ -52,25 +52,26 @@ import aoc_utils
 # """
 let rex = re"mul\(\d+,\d+\)|do\(\)|don't\(\)"
 
-type RecordState = enum
+type DoDontState = enum
   Do, Dont
 
 proc day_03*(): Solution =
   let commands = getInput().findAll(rex)
-  var partOneCount = 0
-  var partTwoCount = 0
-  var partTwoState = Do
+  var doCount = 0
+  var dontCount = 0
+  var doDontState = Do
   for command in commands:
     if command == "do()":
-      partTwoState = Do
+      doDontState = Do
     elif command == "don't()":
-      partTwoState = Dont
+      doDontState = Dont
     else:
       var a, b: int
       if command.scanf("mul($i,$i)", a, b):
         let mult = a * b
-        partOneCount += mult
-        if partTwoState == Do:
-          partTwoCount += mult
+        if doDontState == Do:
+          doCount += mult
+        else:
+          dontCount += mult
 
-  Solution(part_one: $(partOneCount), part_two: $(partTwoCount))
+  Solution(part_one: $(doCount + dontCount), part_two: $(doCount))
