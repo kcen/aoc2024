@@ -91,7 +91,7 @@ Find the updates which are not in the correct order. What do you get if you add 
 Your puzzle answer was 4030.
 """
 
-import std/[strutils, strscans, sequtils, algorithm, tables, sugar, math, sets]
+import std/[strutils, strscans, sequtils, math, sets]
 import aoc_utils
 
 var 

@@ -68,7 +68,7 @@ Flip the word search from the instructions back over to the word search side and
 
 Your puzzle answer was 1912.
 """
-import std/[strutils, sequtils, algorithm]
+import std/[strutils, sequtils]
 import aoc_utils
 
 type SeqGrid[char] = seq[seq[char]]
