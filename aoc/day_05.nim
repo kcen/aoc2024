@@ -101,19 +101,24 @@ var
 proc outOfOrder(x, y: int): bool =
   rules.contains((y,x))
 
-proc sortedMid(check_page: var seq[int], start: int = 0): (bool, int) =
+proc sortedMid(check_page: var seq[int]): (bool, int) =
   let check_length = len(check_page) - 1
-  for i in (start..<check_length):
-    let next_i = i + 1
-    for k in (next_i..check_length):
-      let i_val = check_page[i]
+  var was_sorted = true
+  var modified = false
+  var i = 0
+  while i < check_length:
+    let i_val = check_page[i]
+    modified = false
+    for k in ((i+1)..check_length):
       let k_val = check_page[k]
       if outOfOrder(i_val, k_val):
+        was_sorted = false
+        modified = true
         check_page[i] = k_val
         check_page[k] = i_val
-        let (fixed, mid) = sortedMid(check_page, i)
-        return (false, mid)
-  return (true, check_page[check_length.floorDiv(2)])
+        break
+    if not modified: inc(i)
+  return (was_sorted, check_page[check_length.floorDiv(2)])
 
 proc day_05*(): Solution =
   var mid_sorted = 0
