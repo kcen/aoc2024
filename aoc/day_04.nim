@@ -81,8 +81,8 @@ const sortedSamx = @['M', 'M', 'S', 'S']
 
 
 proc searchXmas(grid: SeqGrid, row: int, col: int, direction: (int, int), depth: int): bool =
-  let (up, right) = direction
-  let next_row = row + up
+  let (down, right) = direction
+  let next_row = row + down
   let next_col = col + right
   if next_row < 0 or next_col < 0 or next_row == len(grid) or next_col == len(grid[0]):
     return false
@@ -98,15 +98,15 @@ proc searchSamx(grid: SeqGrid, row: int, col: int): bool =
     return false
   var vals: seq[char]
   for val in diags:
-    let (up, right) = val
-    vals.add(grid[row + up][col + right])
-  if sorted(vals) == sortedSamx:
+    let (down, right) = val
+    vals.add(grid[row + down][col + right])
+  if vals.count('M') == 2 and vals.count('S') == 2:
     if vals[0] != vals[3]:
       return true
   return false
 
 proc day_04*(): Solution =
-  let grid = getInput().splitlines.mapIt(it.items.toSeq())
+  let grid = getInput().splitlines.mapIt(cast[seq[char]](it))
   let height = len(grid)
   let width = len(grid[0])
 
