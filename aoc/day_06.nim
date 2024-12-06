@@ -180,44 +180,55 @@ You need to get the guard stuck in a loop by adding a single new obstruction. Ho
 
 Your puzzle answer was 1523.
 """
-import std/[strutils, sequtils, algorithm, sets]
+import std/[strutils, sequtils, algorithm, sets, hashes]
 import aoc_utils
+#import nimprof
 
 #Position is bigger Row == Down, bigger Column == Right
 # These correspond to Up, Right, Left, Down TODO: ENUM
 const directions = @[(-1, 0), (0, 1), (1, 0), (0, -1)]
 type Pos = (int, int)
+type PosWithDirection = (Pos, int)
 var max: Pos
-var artifacts = initHashSet[Pos]()
+var artifacts = initHashSet[Pos](100)
+
+proc hash(x: Pos): Hash =
+  ## Computes a Hash from `x`.
+  cast[Hash](x[0] * (max[0]) + x[1])
+
+proc hash(x: PosWithDirection): Hash =
+  ## Computes a Hash from `x`.
+  cast[Hash]((x[0][0] * (max[0]) + x[0][1] + (x[1] * max[0] * max[1])))
 
 func `+`(x, y: Pos): Pos =
   (x[0] + y[0], x[1] + y[1])
 
 proc inbounds(max: Pos, current: Pos): bool =
-  if current[0] < 0 or current[0] > max[0] or current[1] < 0 or current[1] > max[1]:
+  if current[0] < 0 or current[0] == max[0] or current[1] < 0 or current[1] == max[1]:
     return false
   return true
 
 proc isLoop(start: Pos, extra_value: (int, int) = (-1, -1)): bool =
-  var visited = initHashSet[(Pos, int)]()
+  var visited = initHashSet[PosWithDirection](10000)
   var pos = start
   var bearing = 0
   while max.inbounds(pos):
-    var next_pos = pos + directions[bearing]
+    var next_pos: Pos = pos + directions[bearing]
     if artifacts.contains(next_pos) or next_pos == extra_value:
       bearing = (bearing + 1) mod 4
       continue
-    if visited.containsOrIncl((pos, bearing)):
+    let posDir: PosWithDirection = (pos, bearing)
+    if visited.containsOrIncl(posDir):
       return true
     pos = next_pos
   false
 
 proc getVisited(start: Pos): seq[Pos] =
-  var visited = initHashSet[Pos]()
+  var visited = initHashSet[Pos](10000)
   var pos = start
   var bearing = 0
   while max.inbounds(pos):
-    var next_pos = pos + directions[bearing]
+    var next_pos: Pos = pos + directions[bearing]
     if artifacts.contains(next_pos):
       bearing = (bearing + 1) mod 4
       continue
@@ -237,7 +248,7 @@ proc day_06*(): Solution =
         start_guard_Position = (row, column)
       else:
         continue
-  max = (len(charMap) - 1, len(charMap[0]) - 1)
+  max = (len(charMap), len(charMap[0]))
   let part_1_visited = start_guard_Position.getVisited()
   let pt_1 = len(part_1_visited)
   var loops_found = 0
