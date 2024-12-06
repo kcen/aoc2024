@@ -188,7 +188,7 @@ import aoc_utils
 const directions = @[(-1, 0), (0, 1), (1, 0), (0, -1)]
 type Pos = (int, int)
 var max: Pos
-var artifacts: seq[Pos] = @[]
+var artifacts = initHashSet[Pos]()
 
 func `+`(x, y: Pos): Pos =
   (x[0] + y[0], x[1] + y[1])
@@ -232,7 +232,7 @@ proc day_06*(): Solution =
     for column, value in line_data.pairs:
       case value:
       of '#':
-        artifacts.add((row, column))
+        artifacts.incl((row, column))
       of '^':
         start_guard_Position = (row, column)
       else:
