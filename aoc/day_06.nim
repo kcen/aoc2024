@@ -1,12 +1,11 @@
 
-import std/[strutils, strscans, sequtils, sugar, math, algorithm]
+import std/[strutils, strscans, sequtils, sugar, math, algorithm, tables]
 import aoc_utils, itertools
-
-type Pos = (int, int)
 
 #Position is bigger Row == Down, bigger Column == Right
 # These correspond to Up, Right, Left, Down TODO: ENUM
-var directions = @[(-1, 0), (0, 1), (1, 0), (0, -1)]
+const directions = @[(-1, 0), (0, 1), (1, 0), (0, -1)]
+type Pos = (int, int)
 var max: Pos
 
 func `+`(x, y: Pos): Pos =
@@ -20,7 +19,7 @@ proc inbounds(max: Pos, current: Pos): bool =
 proc day_06*(): Solution =
   var artifacts: seq[Pos] = @[]
   var start_guard_Position: Pos
-  var visited: seq[Pos] = @[]
+  var visited = initTable[Pos, int]()
 
   var charMap = getInput().splitlines.mapIt(cast[seq[char]](it))
   for row, line_data in charMap:
@@ -36,35 +35,36 @@ proc day_06*(): Solution =
   var heading = 0
   var guard_Position = start_guard_Position
   while max.inbounds(guard_Position):
-    visited.add(guard_Position)
+    visited[guard_Position] = heading
     var next_Position = guard_Position + directions[heading]
     if artifacts.contains(next_Position):
       heading = (heading + 1) mod 4
       next_Position = guard_Position + directions[heading]
     guard_Position = next_Position
 
-  visited.sort()
-  let part_1_visited = visited.deduplicate(true)
+  var visited_list = visited.keys.toSeq()
+  visited_list.sort()
+  let part_1_visited = visited_list.deduplicate(true)
   let pt_1 = len(part_1_visited)
-  var visited_with_direction: seq[(Pos, int)]
   var loops_found = 0
   var break_me = 0
-  # for p in part_1_visited:
-  #   break_me = 0
-  #   heading = 0
-  #   visited_with_direction = @[]
-  #   guard_Position = start_guard_Position
-  #   while max.inbounds(guard_Position):
-  #     if visited_with_direction.contains((guard_Position, heading)):
-  #       inc(loops_found)
-  #       break
-  #     visited_with_direction.add((guard_Position, heading))
-  #     var next_Position = guard_Position + directions[heading]
-  #     if next_Position == p or artifacts.contains(next_Position):
-  #       heading = (heading + 1) mod 4
-  #       next_Position = guard_Position + directions[heading]
-  #     guard_Position = next_Position
-  #     inc(break_me)
-  #     if break_me > 10000:
-  #       break
+  for check_num, p in part_1_visited.pairs:
+    echo "checking :", check_num
+    break_me = 0
+    heading = 0
+    visited = initTable[Pos, int]()
+    guard_Position = start_guard_Position
+    while max.inbounds(guard_Position):
+      if visited.getOrDefault(guard_Position, -1) == heading:
+        inc(loops_found)
+        break
+      visited[guard_Position] = heading
+      var next_Position = guard_Position + directions[heading]
+      if next_Position == p or artifacts.contains(next_Position):
+        heading = (heading + 1) mod 4
+        next_Position = guard_Position + directions[heading]
+      guard_Position = next_Position
+      inc(break_me)
+      if break_me > 10000:
+        break
   Solution(part_one: $pt_1, part_two: $loops_found)
