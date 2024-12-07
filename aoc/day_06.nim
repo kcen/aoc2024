@@ -253,6 +253,8 @@ proc day_06*(): Solution =
   let pt_1 = len(part_1_visited)
   var loops_found = 0
   for idx, p in part_1_visited.pairs:
+    if start_guard_Position == p:
+      continue
     if start_guard_Position.isLoop(p):
       inc(loops_found)
   Solution(part_one: $pt_1, part_two: $loops_found)
