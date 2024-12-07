@@ -48,11 +48,8 @@ Using your new knowledge of elephant hiding spots, determine which equations cou
 
 Your puzzle answer was 104824810233437.
 """
-import std/[re, strscans, sequtils, strutils, strmisc, sugar, strformat]
+import std/[sequtils, strutils, math]
 import aoc_utils
-
-import strutils
-import std/math
 
 #global bool gross
 var is_pt2: bool
