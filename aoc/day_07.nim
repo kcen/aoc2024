@@ -51,10 +51,7 @@ Your puzzle answer was 104824810233437.
 import std/[sequtils, strutils, math]
 import aoc_utils
 
-#global bool gross
-var is_pt2: bool
-
-proc checkAllOps(values: seq[int], target: int, acc: int = 0): bool =
+proc checkAllOps(values: seq[int], target: int, allow_pt2: bool = false, acc: int = 0): bool =
   if len(values) == 0:
     return target == acc
   elif target < acc:
@@ -63,19 +60,18 @@ proc checkAllOps(values: seq[int], target: int, acc: int = 0): bool =
   let first_val = values[0]
   let other_vals = values[1..^1]
 
-  if other_vals.checkAllOps(target, acc + first_val):
+  if other_vals.checkAllOps(target, allow_pt2, acc + first_val) or other_vals.checkAllOps(target, allow_pt2, acc * first_val):
     return true
-  elif other_vals.checkAllOps(target, acc * first_val):
-    return true
+
+  if not allow_pt2:
+    return false
 
   #let digits = len($first_val)
   # thanks stackoverflow
   let digits =  int(floor(log10(float(first_val)))) + 1
   let cat_op = (acc * 10 ^ digits) + first_val
 
-  if other_vals.checkAllOps(target, cat_op):
-    if not is_pt2:
-      is_pt2 = true
+  if other_vals.checkAllOps(target, true, cat_op):
     return true
   else:
     return false
@@ -89,10 +85,11 @@ proc day_07*(): Solution =
 
     let target = parseInt(parts[0][0..^2])
     let values = parts[1..^1].mapIt(parseInt(it))
-    is_pt2 = false
+
     if values.checkAllOps(target):
-      if not is_pt2:
-        pt1 += target
+      pt1 += target
+      pt2 += target
+    elif values.checkAllOps(target, true):
       pt2 += target
 
   Solution(part_one: $(pt1), part_two: $(pt2))
