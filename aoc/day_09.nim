@@ -76,10 +76,16 @@ type File = object
 proc toInt(c: char): int =
   c.int - '0'.int
 
+var tail_file = 0
+
 proc lastSmallerThan(file_list: seq[File], gap_size: int): int =
-  let num_files = len(file_list)
-  for i in 1..num_files:
-    let next_file = file_list[num_files - i]
+  for i in 0..tail_file:
+    let next_file = file_list[tail_file - i]
+    if next_file.id != -1:
+      tail_file = next_file.id
+      break
+  for i in 0..tail_file:
+    let next_file = file_list[tail_file - i]
     if next_file.id != -1 and next_file.len <= gap_size:
       return next_file.id
   return -1
@@ -100,7 +106,7 @@ proc day_09*(): Solution =
     i += length
 
   var head_file = 0
-  var tail_file = len(files) - 1
+  tail_file = len(files) - 1
   var tail_count = 0
 
   # Part 1
@@ -139,7 +145,7 @@ proc day_09*(): Solution =
   acc = 0
   i = 0
   #var out_string = ""
-  while head_file < tail_file: #fixme
+  while total_data > 0: #fixme
     #Take a file
     let head = files[head_file]
     if head.id == -1:
@@ -168,8 +174,8 @@ proc day_09*(): Solution =
           #out_string.add($(file_to_move.id))
           inc(i)
           dec(next_gap)
-        total_data -= head.len
         files[next_available].id = -1
+        total_data -= file_to_move.len
       else:
         break
     #for _ in 1..next_gap:
