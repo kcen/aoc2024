@@ -190,15 +190,23 @@ const directions = @[(-1, 0), (0, 1), (1, 0), (0, -1)]
 type Pos = (int, int)
 type PosWithDirection = (Pos, int)
 var max: Pos
-var artifacts = initHashSet[Pos](100)
+var artifacts = initHashSet[Hash](8192)
+
+proc hashPos(x: Pos): Hash =
+  hash(x[0]) + x[1]
+
+# proc hashPos(x: Pos): Hash =
+#   0 !& hash(x[0]) !& hash(x[1])
 
 proc hash(x: Pos): Hash =
+  return x.hashPos()
+
+proc hashPosWithDirection(x: PosWithDirection): Hash =
   ## Computes a Hash from `x`.
-  cast[Hash](x[0] * (max[0]) + x[1])
+  hash(x[0][0] * max[0] + x[0][1]) + x[1]
 
 proc hash(x: PosWithDirection): Hash =
-  ## Computes a Hash from `x`.
-  cast[Hash]((x[0][0] * (max[0]) + x[0][1] + (x[1] * max[0] * max[1])))
+  return x.hashPosWithDirection()
 
 func `+`(x, y: Pos): Pos =
   (x[0] + y[0], x[1] + y[1])
@@ -209,16 +217,16 @@ proc inbounds(max: Pos, current: Pos): bool =
   return true
 
 proc isLoop(start: Pos, extra_value: (int, int) = (-1, -1)): bool =
-  var visited = initHashSet[PosWithDirection](10000)
+  var visited = initHashSet[Hash](8192)
   var pos = start
   var bearing = 0
   while max.inbounds(pos):
     var next_pos: Pos = pos + directions[bearing]
-    if artifacts.contains(next_pos) or next_pos == extra_value:
+    if artifacts.contains(next_pos.hash) or next_pos == extra_value:
       bearing = (bearing + 1) mod 4
       continue
     let posDir: PosWithDirection = (pos, bearing)
-    if visited.containsOrIncl(posDir):
+    if visited.containsOrIncl(posDir.hash):
       return true
     pos = next_pos
   false
@@ -229,7 +237,7 @@ proc getVisited(start: Pos): seq[Pos] =
   var bearing = 0
   while max.inbounds(pos):
     var next_pos: Pos = pos + directions[bearing]
-    if artifacts.contains(next_pos):
+    if artifacts.contains(next_pos.hash):
       bearing = (bearing + 1) mod 4
       continue
     visited.incl(pos)
@@ -243,7 +251,7 @@ proc day_06*(): Solution =
     for column, value in line_data.pairs:
       case value:
       of '#':
-        artifacts.incl((row, column))
+        artifacts.incl((row, column).hash)
       of '^':
         start_guard_Position = (row, column)
       else:
