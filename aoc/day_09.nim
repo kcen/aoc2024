@@ -139,7 +139,7 @@ proc day_09*(): Solution =
   acc = 0
   i = 0
   #var out_string = ""
-  while total_data > 0: #fixme
+  while head_file < tail_file: #fixme
     #Take a file
     let head = files[head_file]
     if head.id == -1:
@@ -147,13 +147,13 @@ proc day_09*(): Solution =
       #  out_string.add(".")
       #  inc(i)
       i += head.len
-      total_data -= head.len
     else:
       for _ in 1..head.len:
         acc += i * head.id
         #out_string.add($(head.id))
         inc(i)
       files[head_file].id = -1
+      total_data -= head.len
 
     # Take a gap
     var next_gap = gaps[head_file]
@@ -165,10 +165,10 @@ proc day_09*(): Solution =
         let file_to_move = files[next_available]
         for _ in 1..file_to_move.len:
           acc += i * file_to_move.id
-          total_data -= head.len
           #out_string.add($(file_to_move.id))
           inc(i)
           dec(next_gap)
+        total_data -= head.len
         files[next_available].id = -1
       else:
         break
