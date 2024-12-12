@@ -1,4 +1,4 @@
-import std/[re, strscans, sequtils, sugar, strutils, math, tables, hashes]
+import std/[sequtils,strutils, tables, hashes, math]
 import aoc_utils
 
 type StoneCall = (int, int)
