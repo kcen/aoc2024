@@ -99,21 +99,15 @@ proc day_13*(): Solution =
     let py2: int64 = py + pt2_offset
 
     let press_a: int64 = (px * by - py * bx).floorDiv(ax * by - ay * bx)
-    let press_b: int64 = (py - ay * press_a).floorDiv(by)
-    if press_a * (ax * by - ay * bx) != (px * by - py * bx):
-        discard press_a
-    elif press_b * by != (py - ay * press_a):
-        discard press_b
-    else:
-      pt1 += 3 * press_a + press_b
+    if press_a * (ax * by - ay * bx) == (px * by - py * bx):
+      let press_b: int64 = (py - ay * press_a).floorDiv(by)
+      if press_b * by == (py - ay * press_a):
+        pt1 += 3 * press_a + press_b
 
     let press_a2: int64 = (px2 * by - py2 * bx).floorDiv(ax * by - ay * bx)
-    let press_b2: int64 = (py2 - ay * press_a2).floorDiv(by)
-    if press_a2 * (ax * by - ay * bx) != (px2 * by - py2 * bx):
-        discard press_a2
-    elif press_b2 * by != (py2 - ay * press_a2):
-        discard press_b2
-    else:
-      pt2 += 3 * press_a2 + press_b2
+    if press_a2 * (ax * by - ay * bx) == (px2 * by - py2 * bx):
+      let press_b2: int64 = (py2 - ay * press_a2).floorDiv(by)
+      if press_b2 * by == (py2 - ay * press_a2):
+        pt2 += 3 * press_a2 + press_b2
 
   return Solution(part_one: $pt1, part_two: $pt2)
