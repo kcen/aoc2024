@@ -77,8 +77,6 @@ Your puzzle answer was 104140871044942.
 import std/[strutils, strscans, math]
 import aoc_utils
 
-proc `/`(x, y: int64): int64 = x div y
-
 const game_template = """
 Button A: X+$i, Y+$i
 Button B: X+$i, Y+$i
@@ -98,14 +96,15 @@ proc day_13*(): Solution =
     let px2: int64 = px + pt2_offset
     let py2: int64 = py + pt2_offset
 
-    let press_a: int64 = (px * by - py * bx).floorDiv(ax * by - ay * bx)
-    if press_a * (ax * by - ay * bx) == (px * by - py * bx):
+    let det: int64 = ax * by - ay * bx
+    let press_a: int64 = (px * by - py * bx).floorDiv(det)
+    if press_a * det == (px * by - py * bx):
       let press_b: int64 = (py - ay * press_a).floorDiv(by)
       if press_b * by == (py - ay * press_a):
         pt1 += 3 * press_a + press_b
 
-    let press_a2: int64 = (px2 * by - py2 * bx).floorDiv(ax * by - ay * bx)
-    if press_a2 * (ax * by - ay * bx) == (px2 * by - py2 * bx):
+    let press_a2: int64 = (px2 * by - py2 * bx).floorDiv(det)
+    if press_a2 * det == (px2 * by - py2 * bx):
       let press_b2: int64 = (py2 - ay * press_a2).floorDiv(by)
       if press_b2 * by == (py2 - ay * press_a2):
         pt2 += 3 * press_a2 + press_b2
