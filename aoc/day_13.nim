@@ -74,7 +74,7 @@ Using the corrected prize coordinates, figure out how to win as many prizes as p
 
 Your puzzle answer was 104140871044942.
 """
-import std/[strutils, strscans, math]
+import std/[strutils, strscans]
 import aoc_utils
 
 const game_template = """
