@@ -83,6 +83,7 @@ Button B: X+$i, Y+$i
 Prize: X=$i, Y=$i
 """
 const pt2_offset = 10000000000000'i64
+
 proc day_13*(): Solution =
   var pt1: int64 = 0
   var pt2: int64 = 0
@@ -91,22 +92,26 @@ proc day_13*(): Solution =
     var success = false
     var ax, ay, bx, by, px, py: int64
     (success, ax, ay, bx, by, px, py) = game.scanTuple(game_template)
-    # (ax, ay, bx, by, px, py) = (a,b,c,d,e,f)
 
     let px2: int64 = px + pt2_offset
     let py2: int64 = py + pt2_offset
 
     let det: int64 = ax * by - ay * bx
-    let press_a: int64 = (px * by - py * bx).floorDiv(det)
-    if press_a * det == (px * by - py * bx):
-      let press_b: int64 = (py - ay * press_a).floorDiv(by)
-      if press_b * by == (py - ay * press_a):
-        pt1 += 3 * press_a + press_b
 
-    let press_a2: int64 = (px2 * by - py2 * bx).floorDiv(det)
-    if press_a2 * det == (px2 * by - py2 * bx):
-      let press_b2: int64 = (py2 - ay * press_a2).floorDiv(by)
-      if press_b2 * by == (py2 - ay * press_a2):
-        pt2 += 3 * press_a2 + press_b2
+    let m_part: int64 = px * by - py * bx
+    if 0 == m_part.mod(det):
+      let press_a: int64 = m_part.div(det)
+      let n_part: int64 = py - ay * press_a
+      #let press_b: int64 = n_part.floorDiv(by)
+      if 0 == n_part.mod(by):
+        pt1 += 3 * press_a + n_part.div(by)
+
+    let m_part2: int64 = px2 * by - py2 * bx
+    if 0 == m_part2.mod(det):
+      let press_a2: int64 = m_part2.div(det)
+      let n_part2: int64 = py2 - ay * press_a2
+      #let press_b: int64 = n_part.floorDiv(by)
+      if 0 == n_part2.mod(by):
+        pt2 += 3 * press_a2 + n_part2.div(by)
 
   return Solution(part_one: $pt1, part_two: $pt2)
