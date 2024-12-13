@@ -136,7 +136,7 @@ What is the new total price of fencing all regions on your map?
 
 Your puzzle answer was 818286.
 """
-import std/[strutils, sequtils, math]
+import std/[strutils, sequtils]
 import aoc_utils
 
 type SeqGrid[char] = seq[seq[char]]
